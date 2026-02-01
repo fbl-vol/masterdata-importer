@@ -62,7 +62,10 @@ function App() {
         <div className="header-controls">
           <div className="color-selector">
             <label>Color by:</label>
-            <select value={colorBy} onChange={(e) => setColorBy(e.target.value as any)}>
+            <select 
+              value={colorBy} 
+              onChange={(e) => setColorBy(e.target.value as 'manufacturer' | 'age' | 'capacity')}
+            >
               <option value="manufacturer">Manufacturer</option>
               <option value="age">Age</option>
               <option value="capacity">Capacity</option>
