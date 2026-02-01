@@ -69,6 +69,9 @@ public class ExcelImportService
             // Find column indices
             var columnIndices = MapColumns(headers);
 
+            // Track seen GSRNs to avoid duplicates within the file
+            var seenGsrns = new HashSet<string>();
+
             // Read data rows
             for (int row = headerRow + 1; row <= worksheet.Dimension.Rows; row++)
             {
@@ -79,6 +82,12 @@ public class ExcelImportService
                     // Skip rows without GSRN or with invalid GSRN
                     if (string.IsNullOrWhiteSpace(gsrn) || !IsNumeric(gsrn))
                         continue;
+
+                    // Skip duplicates within the file (take the first occurrence)
+                    if (seenGsrns.Contains(gsrn))
+                        continue;
+                    
+                    seenGsrns.Add(gsrn);
 
                     var existingTurbine = await _context.WindTurbines
                         .FirstOrDefaultAsync(t => t.Gsrn == gsrn);
@@ -107,6 +116,12 @@ public class ExcelImportService
                     }
 
                     result.TotalCount++;
+
+                    // Save in batches of 1000 to avoid memory issues
+                    if (result.TotalCount % 1000 == 0)
+                    {
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -115,6 +130,7 @@ public class ExcelImportService
                 }
             }
 
+            // Save any remaining records
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -176,7 +192,7 @@ public class ExcelImportService
             return null;
 
         if (DateTime.TryParse(value, out var date))
-            return date;
+            return DateTime.SpecifyKind(date, DateTimeKind.Utc);
 
         return null;
     }
