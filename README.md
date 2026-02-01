@@ -1,9 +1,17 @@
 # Master Data Importer
 
-A .NET 10.0 Web API for importing and managing wind turbine master data from Excel files. The data comes in Danish and is stored with translated field names in a PostgreSQL database.
+A .NET 10.0 Web API for importing and managing wind turbine master data from Excel files, with an interactive TypeScript map application for visualization. The data comes in Danish and is stored with translated field names in a PostgreSQL database.
+
+## Components
+
+This repository contains two main components:
+
+1. **MasterDataImporter** - .NET Web API backend for data import and management
+2. **wind-turbine-map** - React + TypeScript frontend for interactive map visualization
 
 ## Features
 
+### Backend API
 - ✅ Import wind turbine data from Excel (.xlsx) files
 - ✅ Automatic database creation and migration on startup
 - ✅ RESTful API endpoints for data retrieval
@@ -14,10 +22,19 @@ A .NET 10.0 Web API for importing and managing wind turbine master data from Exc
 - ✅ Duplicate detection and handling
 - ✅ Batch operations support
 
+### Frontend Map Application
+- ✅ Interactive map with Leaflet.js and OpenStreetMap
+- ✅ Color-coded markers (by manufacturer, age, or capacity)
+- ✅ Advanced filtering (manufacturer, location, capacity, year)
+- ✅ Real-time statistics and charts
+- ✅ Responsive design for mobile and desktop
+- ✅ Fast performance with optimized rendering
+
 ## Prerequisites
 
 - Docker and Docker Compose (recommended)
 - OR .NET 10.0 SDK (for local development)
+- Node.js 18+ and npm (for frontend map application)
 
 ## Quick Start with Docker
 
@@ -27,7 +44,7 @@ git clone <repository-url>
 cd masterdata-importer
 ```
 
-2. Start the application with Docker Compose:
+2. Start the backend API with Docker Compose:
 ```bash
 docker compose up --build
 ```
@@ -41,6 +58,16 @@ docker compose up --build
 ```bash
 ./test-api.sh
 ```
+
+5. Start the frontend map application:
+```bash
+cd wind-turbine-map
+npm install
+npm run dev
+```
+
+6. Open the map application:
+   - Navigate to http://localhost:5173 in your browser
 
 ## API Endpoints
 
@@ -204,6 +231,7 @@ docker compose down -v
 
 ## Technology Stack
 
+### Backend
 - **.NET 10.0** - Application framework
 - **ASP.NET Core Web API** - REST API framework
 - **Entity Framework Core 10.0** - ORM for database access
@@ -213,21 +241,40 @@ docker compose down -v
 - **Scalar** - Interactive API documentation UI
 - **Docker & Docker Compose** - Containerization
 
+### Frontend
+- **React 18** - UI framework
+- **TypeScript 5** - Type safety
+- **Vite** - Build tool and dev server
+- **Leaflet.js** - Interactive maps
+- **React-Leaflet** - React bindings for Leaflet
+- **Chart.js** - Data visualization
+- **React-ChartJS-2** - React wrapper for Chart.js
+
 ## Project Structure
 
 ```
 masterdata-importer/
-├── MasterDataImporter/
-│   ├── Controllers/          # API endpoints
-│   ├── Data/                 # Database context and migrations
-│   ├── DTOs/                 # Data transfer objects
-│   ├── Models/               # Entity models
-│   ├── Services/             # Business logic services
-│   ├── Dockerfile            # Container definition
-│   └── Program.cs            # Application entry point
-├── docker-compose.yml        # Service orchestration
-├── test-api.sh              # API test script
-└── README.md                # This file
+├── MasterDataImporter/           # Backend .NET API
+│   ├── Controllers/              # API endpoints
+│   ├── Data/                     # Database context and migrations
+│   ├── DTOs/                     # Data transfer objects
+│   ├── Models/                   # Entity models
+│   ├── Services/                 # Business logic services
+│   ├── Dockerfile                # Container definition
+│   └── Program.cs                # Application entry point
+├── wind-turbine-map/             # Frontend TypeScript app
+│   ├── src/
+│   │   ├── components/           # React components
+│   │   ├── hooks/                # Custom React hooks
+│   │   ├── services/             # API client
+│   │   ├── types/                # TypeScript types
+│   │   ├── utils/                # Utility functions
+│   │   └── App.tsx               # Main application
+│   ├── public/                   # Static assets
+│   └── vite.config.ts            # Vite configuration
+├── docker-compose.yml            # Service orchestration
+├── test-api.sh                   # API test script
+└── README.md                     # This file
 ```
 
 ## Troubleshooting

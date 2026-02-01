@@ -1,0 +1,46 @@
+.turbine-map {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.turbine-popup {
+  min-width: 250px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.turbine-popup-title {
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e5e7eb;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.turbine-popup-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.turbine-popup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  gap: 12px;
+}
+
+.turbine-popup-row strong {
+  color: #6b7280;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.turbine-popup-row:not(strong) {
+  color: #111827;
+  text-align: right;
+}
