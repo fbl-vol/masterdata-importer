@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import type { WindTurbine } from '../types/turbine';
-import { WindTurbineAPI } from '../services/api';
+import {useEffect, useState} from 'react';
+import type {WindTurbine} from '../types/turbine';
+import {WindTurbineAPI} from '../services/api';
 
 interface UseTurbinesResult {
   turbines: WindTurbine[];
@@ -12,7 +12,7 @@ interface UseTurbinesResult {
 /**
  * Custom hook for fetching and managing wind turbine data
  */
-export function useTurbines(): UseTurbinesResult {
+function useTurbines(): UseTurbinesResult {
   const [turbines, setTurbines] = useState<WindTurbine[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,11 +20,16 @@ export function useTurbines(): UseTurbinesResult {
   const fetchTurbines = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Fetch all turbines with a large page size
       // In production, you might want to implement pagination or lazy loading
-      const data = await WindTurbineAPI.getAllTurbines(1, 10000);
+      const data = await WindTurbineAPI.getAllTurbines(1, 100000);
+
+      // Only keep turbines that have coordinate information
+
+      console.log(`Fetched ${data.length} turbines, ${data.length} have coordinates, ${data.length} have capacity >= 2MW`);
+
       setTurbines(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch turbines');
@@ -45,3 +50,5 @@ export function useTurbines(): UseTurbinesResult {
     refetch: fetchTurbines,
   };
 }
+
+export default useTurbines

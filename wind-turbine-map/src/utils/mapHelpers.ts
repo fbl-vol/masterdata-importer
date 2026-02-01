@@ -1,5 +1,6 @@
 import type { LatLngExpression } from 'leaflet';
 import type { WindTurbine } from '../types/turbine';
+import proj4 from 'proj4';
 
 // Denmark's approximate center
 export const DENMARK_CENTER: LatLngExpression = [56.26392, 9.501785];
@@ -10,30 +11,29 @@ export const DEFAULT_ZOOM = 7;
  * This is a simplified conversion for UTM Zone 32N (Denmark)
  * For production, consider using a library like proj4js
  */
-export function utmToLatLng(x: number, y: number): LatLngExpression | null {
-  // This is a placeholder - in production you'd use proper UTM conversion
-  // For now, we'll assume coordinates might already be in lat/lng or need conversion
-  
-  // Check if coordinates look like UTM (typically larger values)
-  if (x > 180 || y > 90 || x < -180 || y < -90) {
-    // Simplified UTM to Lat/Lng conversion for Denmark (Zone 32N)
-    // This is approximate and should be replaced with proper conversion
-    const lng = ((x - 500000) / 111320) + 9;
-    const lat = (y / 111320) - 56;
+export function utmToLatLng(easting: number, northing: number): LatLngExpression | null {
+    const zone = 32;
+    const isNorthHemisphere = true;
+
+// Create the UTM projection string
+    const utmProj = `+proj=utm +zone=${zone} +${isNorthHemisphere ? 'north' : 'south'} +ellps=WGS84 +datum=WGS84 +units=m +no_defs`;
+
+// Define the WGS84 (lat/long) projection
+    const wgs84Proj = '+proj=longlat +datum=WGS84 +no_defs';
     
-    // Validate the result is within Denmark's approximate bounds
-    if (lat >= 54.5 && lat <= 58 && lng >= 8 && lng <= 13) {
-      return [lat, lng];
+// Convert UTM to Lat/Lng
+    const [longitude, latitude] = proj4(utmProj, wgs84Proj, [easting, northing]);
+
+    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+    
+    if (isNaN(latitude) || isNaN(longitude)) {
+        return null;
     }
-  }
-  
-  // If coordinates seem reasonable as lat/lng, use them directly
-  if (Math.abs(x) <= 180 && Math.abs(y) <= 90) {
-    return [y, x]; // Note: Leaflet expects [lat, lng]
-  }
-  
-  return null;
+    
+    return [latitude, longitude];
 }
+
+
 
 /**
  * Get marker color based on turbine properties

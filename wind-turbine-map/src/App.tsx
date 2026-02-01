@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { TurbineMap } from './components/Map/TurbineMap';
 import { FilterPanel } from './components/Filters/FilterPanel';
 import { StatsPanel } from './components/Statistics/StatsPanel';
-import { useTurbines } from './hooks/useTurbines';
+import useTurbines from './hooks/useTurbines';
 import { useFilters } from './hooks/useFilters';
 import { filterTurbines } from './utils/filterTurbines';
 import './App.css';

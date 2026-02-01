@@ -1,7 +1,7 @@
 import type { WindTurbine, ApiStats } from '../types/turbine';
 
 // API configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // API service for fetching wind turbine data
 export class WindTurbineAPI {
@@ -9,7 +9,7 @@ export class WindTurbineAPI {
   /**
    * Get all wind turbines with pagination
    */
-  static async getAllTurbines(page = 1, pageSize = 1000): Promise<WindTurbine[]> {
+  static async getAllTurbines(page = 1, pageSize = 10000): Promise<WindTurbine[]> {
     const response = await fetch(`${API_BASE_URL}/windturbines?page=${page}&pageSize=${pageSize}`);
     
     if (!response.ok) {
