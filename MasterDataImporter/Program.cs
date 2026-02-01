@@ -48,8 +48,20 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
+// Enable OpenAPI and Scalar in all environments (including Production for Docker access)
+// Scalar UI will be available at:
+//   - Local development: https://localhost:5001/scalar/v1 or http://localhost:5000/scalar/v1
+//   - Docker: http://localhost:8080/scalar/v1
+// OpenAPI spec will be available at:
+//   - Local development: https://localhost:5001/openapi/v1.json or http://localhost:5000/openapi/v1.json
+//   - Docker: http://localhost:8080/openapi/v1.json
 app.MapOpenApi();
-app.MapScalarApiReference();
+app.MapScalarApiReference(options =>
+{
+    options.WithTitle("MasterData Importer API");
+    options.WithTheme(ScalarTheme.Purple);
+    options.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+});
 
 app.UseCors("AllowAll");
 app.UseAuthorization();
