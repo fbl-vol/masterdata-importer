@@ -1,4 +1,4 @@
-import { WindTurbine } from '../../types/turbine';
+import type { WindTurbine } from '../../types/turbine';
 import { getUniqueValues } from '../../utils/filterTurbines';
 import './FilterPanel.css';
 

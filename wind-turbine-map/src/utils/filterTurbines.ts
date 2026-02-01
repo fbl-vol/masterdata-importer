@@ -1,4 +1,4 @@
-import { WindTurbine, TurbineFilters } from '../types/turbine';
+import type { WindTurbine, TurbineFilters } from '../types/turbine';
 
 /**
  * Filter turbines based on the selected criteria

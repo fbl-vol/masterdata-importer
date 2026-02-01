@@ -1,4 +1,4 @@
-import { WindTurbine, ApiStats } from '../types/turbine';
+import type { WindTurbine, ApiStats } from '../types/turbine';
 
 // API configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';

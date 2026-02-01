@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { TurbineFilters } from '../types/turbine';
+import type { TurbineFilters } from '../types/turbine';
 
 const currentYear = new Date().getFullYear();
 

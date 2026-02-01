@@ -1,5 +1,5 @@
-import { LatLngExpression } from 'leaflet';
-import { WindTurbine } from '../types/turbine';
+import type { LatLngExpression } from 'leaflet';
+import type { WindTurbine } from '../types/turbine';
 
 // Denmark's approximate center
 export const DENMARK_CENTER: LatLngExpression = [56.26392, 9.501785];

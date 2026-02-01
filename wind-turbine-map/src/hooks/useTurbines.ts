@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { WindTurbine } from '../types/turbine';
+import type { WindTurbine } from '../types/turbine';
 import { WindTurbineAPI } from '../services/api';
 
 interface UseTurbinesResult {

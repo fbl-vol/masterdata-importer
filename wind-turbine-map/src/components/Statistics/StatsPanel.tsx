@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { WindTurbine } from '../../types/turbine';
+import type { WindTurbine } from '../../types/turbine';
 import { calculateStats, groupByCapacity, groupByYear } from '../../utils/filterTurbines';
 import './StatsPanel.css';
 

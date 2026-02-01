@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { WindTurbine } from '../../types/turbine';
+import type { WindTurbine } from '../../types/turbine';
 import { 
   DENMARK_CENTER, 
   DEFAULT_ZOOM, 
