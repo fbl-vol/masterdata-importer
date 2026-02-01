@@ -244,6 +244,34 @@ Check connection string in `appsettings.json`
 - Check API logs for specific errors
 - Verify the Excel file has the expected Danish column headers
 
+## Security Considerations
+
+⚠️ **Important**: This project uses default credentials for demonstration purposes. Before deploying to production:
+
+1. **Change default passwords**: Update PostgreSQL credentials in:
+   - `docker-compose.yml` (POSTGRES_PASSWORD)
+   - `MasterDataImporter/appsettings.json` (ConnectionStrings)
+   - Use environment variables or secrets management
+
+2. **Restrict CORS**: The current CORS policy allows all origins. Update `Program.cs` to:
+   ```csharp
+   options.AddPolicy("AllowSpecificOrigin", policy =>
+   {
+       policy.WithOrigins("https://yourdomain.com")
+             .WithMethods("GET", "POST")
+             .WithHeaders("Content-Type");
+   });
+   ```
+
+3. **Use secrets management**: For production, use:
+   - Docker secrets
+   - Azure Key Vault
+   - AWS Secrets Manager
+   - Kubernetes secrets
+   - Environment variables
+
+4. **Enable HTTPS**: Configure SSL/TLS certificates for production deployment
+
 ## License
 
 See LICENSE file for details.
