@@ -23,7 +23,9 @@ public class ExcelImportService
         { "Fabrikat", "Manufacturer" },
         { "Typebetegnelse", "TypeDesignation" },
         { "Kommune", "LocalAuthority" },
-        { "Type af placering", "LocationType" }
+        { "Type af placering", "LocationType" },
+        {"X (øst) koordinat \nUTM 32 Euref89", "EastCoordinate" },
+        {"Y (nord) koordinat \nUTM 32 Euref89", "NorthCoordinate" }
     };
 
     public ExcelImportService(ApplicationDbContext context, ILogger<ExcelImportService> logger)
@@ -104,6 +106,8 @@ public class ExcelImportService
                     turbine.TypeDesignation = GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("TypeDesignation", -1));
                     turbine.LocalAuthority = GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("LocalAuthority", -1));
                     turbine.LocationType = GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("LocationType", -1));
+                    turbine.CoordinateX = ParseDecimal(GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("EastCoordinate", -1)));
+                    turbine.CoordinateY = ParseDecimal(GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("NorthCoordinate", -1)));
 
                     if (existingTurbine == null)
                     {
