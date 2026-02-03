@@ -1,7 +1,8 @@
+using masterdata_api.Data;
 using Microsoft.EntityFrameworkCore;
-using MasterDataImporter.Data;
-using MasterDataImporter.Services;
+using masterdata_api.Services;
 using Scalar.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

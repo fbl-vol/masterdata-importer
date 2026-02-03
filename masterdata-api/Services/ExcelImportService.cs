@@ -1,10 +1,10 @@
+using masterdata_api.Data;
+using masterdata_api.DTOs;
+using masterdataapi.Models;
 using OfficeOpenXml;
-using MasterDataImporter.Models;
-using MasterDataImporter.Data;
-using MasterDataImporter.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace MasterDataImporter.Services;
+namespace masterdata_api.Services;
 
 public class ExcelImportService
 {

@@ -1,7 +1,7 @@
+using masterdataapi.Models;
 using Microsoft.EntityFrameworkCore;
-using MasterDataImporter.Models;
 
-namespace MasterDataImporter.Data;
+namespace masterdata_api.Data;
 
 public class ApplicationDbContext : DbContext
 {

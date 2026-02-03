@@ -1,10 +1,10 @@
+using masterdata_api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MasterDataImporter.Data;
-using MasterDataImporter.DTOs;
-using MasterDataImporter.Services;
+using masterdata_api.DTOs;
+using masterdata_api.Services;
 
-namespace MasterDataImporter.Controllers;
+namespace masterdata_api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
