@@ -1,36 +1,20 @@
 services:
-  postgres:
-    image: postgres:17
-    container_name: masterdata-postgres
-    environment:
-      POSTGRES_DB: masterdata
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   api:
     build:
       context: ./MasterDataImporter
       dockerfile: Dockerfile
     container_name: masterdata-api
     ports:
-      - "8080:8080"
+      - "8082:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=masterdata;Username=postgres;Password=postgres
-    depends_on:
-      postgres:
-        condition: service_healthy
+      - ConnectionStrings__DefaultConnection=Host=pendio-postgres;Port=5432;Database=masterdata;Username=pendio;Password=pendio
+    networks:
+      - pendio-network
     restart: unless-stopped
 
-volumes:
-  postgres-data:
+networks:
+  pendio-network:
+    external: true
+    name: pendio_pendio-network
