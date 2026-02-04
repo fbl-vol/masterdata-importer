@@ -51,5 +51,10 @@ public class WindTurbine
     [MaxLength(200)]
     public string? CoordinateOrigin { get; set; }
 
+    public int? SiteId { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation property
+    public Site? Site { get; set; }
 }

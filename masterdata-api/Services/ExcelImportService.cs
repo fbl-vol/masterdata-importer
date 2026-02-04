@@ -10,6 +10,7 @@ public class ExcelImportService
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<ExcelImportService> _logger;
+    private readonly CadastralLookupService _cadastralLookupService;
 
     // Danish to English column name mapping
     private static readonly Dictionary<string, string> ColumnMapping = new()
@@ -24,14 +25,20 @@ public class ExcelImportService
         { "Typebetegnelse", "TypeDesignation" },
         { "Kommune", "LocalAuthority" },
         { "Type af placering", "LocationType" },
+        { "Matrikelnummer", "CadastralNo" },
+        { "Ejerlav", "CadastralDistrict" },
         {"X (øst) koordinat \nUTM 32 Euref89", "EastCoordinate" },
         {"Y (nord) koordinat \nUTM 32 Euref89", "NorthCoordinate" }
     };
 
-    public ExcelImportService(ApplicationDbContext context, ILogger<ExcelImportService> logger)
+    public ExcelImportService(
+        ApplicationDbContext context, 
+        ILogger<ExcelImportService> logger,
+        CadastralLookupService cadastralLookupService)
     {
         _context = context;
         _logger = logger;
+        _cadastralLookupService = cadastralLookupService;
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     }
 
@@ -106,8 +113,24 @@ public class ExcelImportService
                     turbine.TypeDesignation = GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("TypeDesignation", -1));
                     turbine.LocalAuthority = GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("LocalAuthority", -1));
                     turbine.LocationType = GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("LocationType", -1));
+                    turbine.CadastralNo = GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("CadastralNo", -1));
+                    turbine.CadastralDistrict = GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("CadastralDistrict", -1));
                     turbine.CoordinateX = ParseDecimal(GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("EastCoordinate", -1)));
                     turbine.CoordinateY = ParseDecimal(GetCellValue(worksheet, row, columnIndices.GetValueOrDefault("NorthCoordinate", -1)));
+
+                    // Lookup and assign site based on cadastral information
+                    if (!string.IsNullOrWhiteSpace(turbine.CadastralNo) && 
+                        !string.IsNullOrWhiteSpace(turbine.CadastralDistrict))
+                    {
+                        var site = await _cadastralLookupService.GetOrCreateSiteFromCadastralDataAsync(
+                            turbine.CadastralNo, 
+                            turbine.CadastralDistrict);
+                        
+                        if (site != null)
+                        {
+                            turbine.SiteId = site.Id;
+                        }
+                    }
 
                     if (existingTurbine == null)
                     {

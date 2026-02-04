@@ -1,0 +1,23 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace masterdataapi.Models;
+
+public class Site
+{
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    [MaxLength(200)]
+    public string Name { get; set; } = string.Empty;
+
+    [MaxLength(100)]
+    public string? SfEjendomsNr { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation property
+    public ICollection<WindTurbine> WindTurbines { get; set; } = new List<WindTurbine>();
+}

@@ -19,6 +19,8 @@ public class WindTurbineDto
     public decimal? CoordinateY { get; set; }
     public string? CoordinateOrigin { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int? SiteId { get; set; }
+    public string? SiteName { get; set; }
 }
 
 public class ImportResultDto

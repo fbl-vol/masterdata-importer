@@ -19,6 +19,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Register services
 builder.Services.AddScoped<ExcelImportService>();
+builder.Services.AddScoped<CadastralLookupService>();
+
+// Add HttpClient for CadastralLookupService
+builder.Services.AddHttpClient<CadastralLookupService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 
 // Add CORS
 builder.Services.AddCors(options =>

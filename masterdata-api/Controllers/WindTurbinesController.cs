@@ -56,6 +56,7 @@ public class WindTurbinesController : ControllerBase
         [FromQuery] int pageSize = 100)
     {
         var turbines = await _context.WindTurbines
+            .Include(t => t.Site)
             .OrderBy(t => t.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
@@ -77,7 +78,9 @@ public class WindTurbinesController : ControllerBase
                 CoordinateX = t.CoordinateX,
                 CoordinateY = t.CoordinateY,
                 CoordinateOrigin = t.CoordinateOrigin,
-                CreatedAt = t.CreatedAt
+                CreatedAt = t.CreatedAt,
+                SiteId = t.SiteId,
+                SiteName = t.Site != null ? t.Site.Name : null
             })
             .ToListAsync();
 
@@ -91,6 +94,7 @@ public class WindTurbinesController : ControllerBase
     public async Task<ActionResult<WindTurbineDto>> GetByGsrn(string gsrn)
     {
         var turbine = await _context.WindTurbines
+            .Include(t => t.Site)
             .Where(t => t.Gsrn == gsrn)
             .Select(t => new WindTurbineDto
             {
@@ -110,7 +114,9 @@ public class WindTurbinesController : ControllerBase
                 CoordinateX = t.CoordinateX,
                 CoordinateY = t.CoordinateY,
                 CoordinateOrigin = t.CoordinateOrigin,
-                CreatedAt = t.CreatedAt
+                CreatedAt = t.CreatedAt,
+                SiteId = t.SiteId,
+                SiteName = t.Site != null ? t.Site.Name : null
             })
             .FirstOrDefaultAsync();
 
@@ -134,6 +140,7 @@ public class WindTurbinesController : ControllerBase
         }
 
         var turbines = await _context.WindTurbines
+            .Include(t => t.Site)
             .Where(t => gsrnList.Contains(t.Gsrn))
             .Select(t => new WindTurbineDto
             {
@@ -153,7 +160,9 @@ public class WindTurbinesController : ControllerBase
                 CoordinateX = t.CoordinateX,
                 CoordinateY = t.CoordinateY,
                 CoordinateOrigin = t.CoordinateOrigin,
-                CreatedAt = t.CreatedAt
+                CreatedAt = t.CreatedAt,
+                SiteId = t.SiteId,
+                SiteName = t.Site != null ? t.Site.Name : null
             })
             .ToListAsync();
 
@@ -170,6 +179,7 @@ public class WindTurbinesController : ControllerBase
         [FromQuery] int pageSize = 100)
     {
         var turbines = await _context.WindTurbines
+            .Include(t => t.Site)
             .Where(t => t.TypeDesignation != null && 
                    t.TypeDesignation.Contains(modelType))
             .OrderBy(t => t.Id)
@@ -193,7 +203,9 @@ public class WindTurbinesController : ControllerBase
                 CoordinateX = t.CoordinateX,
                 CoordinateY = t.CoordinateY,
                 CoordinateOrigin = t.CoordinateOrigin,
-                CreatedAt = t.CreatedAt
+                CreatedAt = t.CreatedAt,
+                SiteId = t.SiteId,
+                SiteName = t.Site != null ? t.Site.Name : null
             })
             .ToListAsync();
 
@@ -210,6 +222,7 @@ public class WindTurbinesController : ControllerBase
         [FromQuery] int pageSize = 100)
     {
         var turbines = await _context.WindTurbines
+            .Include(t => t.Site)
             .Where(t => t.Manufacturer != null && 
                    t.Manufacturer.Contains(manufacturer))
             .OrderBy(t => t.Id)
@@ -233,7 +246,9 @@ public class WindTurbinesController : ControllerBase
                 CoordinateX = t.CoordinateX,
                 CoordinateY = t.CoordinateY,
                 CoordinateOrigin = t.CoordinateOrigin,
-                CreatedAt = t.CreatedAt
+                CreatedAt = t.CreatedAt,
+                SiteId = t.SiteId,
+                SiteName = t.Site != null ? t.Site.Name : null
             })
             .ToListAsync();
 
