@@ -18,6 +18,10 @@ The following columns should be present (row 7 in the original file format):
 | H | Typebetegnelse | Type designation/model |
 | I | Kommune | Local authority/municipality |
 | J | Type af placering | Location type (e.g., LAND, SEA) |
+| K | Matrikelnummer | Cadastral number (used for ownership lookup) |
+| L | Ejerlav | Cadastral district (used for ownership lookup) |
+| M | X (øst) koordinat \nUTM 32 Euref89 | East coordinate UTM 32 Euref89 |
+| N | Y (nord) koordinat \nUTM 32 Euref89 | North coordinate UTM 32 Euref89 |
 
 ## Example Data Rows
 
@@ -43,3 +47,9 @@ Møllenummer (GSRN) | Dato for oprindelig nettilslutning | Dato for afmeldning |
 - Existing turbines (GSRN already in database) are **updated**
 - Invalid rows are skipped and reported in the import result
 - Import is processed in batches of 1000 records for efficiency
+- **Ownership lookup**: If Matrikelnummer and Ejerlav are provided, the system will:
+  1. Query the DAWA API to get the property identifier (sfeejendomsnr)
+  2. Query the OIS API to get the owner name
+  3. Create or find a Site entity for the owner
+  4. Link the turbine to the Site
+

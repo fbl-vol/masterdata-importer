@@ -110,6 +110,25 @@ npm run dev
 - **GET** `/api/windturbines/stats` - Get database statistics
   - Returns: Object with `totalTurbines`, `manufacturers`, `modelTypes` counts
 
+### Sites (Wind Parks/Farms)
+- **GET** `/api/sites` - Get all sites (paginated)
+  - Query params:
+    - `page` (default: 1)
+    - `pageSize` (default: 100)
+  - Returns: Array of `SiteDto` with turbine counts
+
+- **GET** `/api/sites/{id}` - Get a single site by ID
+  - Path param: `id` (Site identifier)
+  - Returns: `SiteDto` or 404 if not found
+
+- **GET** `/api/sites/{id}/turbines` - Get all turbines for a specific site
+  - Path param: `id` (Site identifier)
+  - Query params: `page`, `pageSize`
+  - Returns: `SiteDetailDto` with turbine list
+
+- **GET** `/api/sites/stats` - Get site statistics
+  - Returns: Object with `totalSites`, `totalTurbinesWithSite`, `totalTurbinesWithoutSite`, `averageTurbinesPerSite`
+
 ## Example Usage
 
 ### Import an Excel file:
@@ -135,6 +154,16 @@ curl -X POST http://localhost:8080/api/windturbines/gsrn/batch \
   -d '["570715000000032516", "570714700000011283"]'
 ```
 
+### Get all sites:
+```bash
+curl http://localhost:8080/api/sites
+```
+
+### Get turbines for a specific site:
+```bash
+curl http://localhost:8080/api/sites/1/turbines
+```
+
 ## Data Model
 
 Wind turbine data includes:
@@ -148,7 +177,16 @@ Wind turbine data includes:
 - **TypeDesignation** - Model type (Typebetegnelse)
 - **LocalAuthority** - Municipality (Kommune)
 - **LocationType** - Type of location (Type af placering)
+- **CadastralNo** - Cadastral number (Matrikelnummer)
+- **CadastralDistrict** - Cadastral district (Ejerlav)
 - **Coordinates** - X, Y coordinates (UTM coordinates)
+- **SiteId** - Reference to the Site/Park entity (derived from ownership lookup)
+
+Site data includes:
+- **Name** - Owner name (retrieved from OIS API)
+- **SfEjendomsNr** - Property identifier (retrieved from DAWA API)
+- **CreatedAt/UpdatedAt** - Timestamps
+- **WindTurbines** - Collection of turbines at this site
 
 ## Danish to English Field Mapping
 
@@ -164,8 +202,10 @@ Wind turbine data includes:
 | Typebetegnelse | TypeDesignation |
 | Kommune | LocalAuthority |
 | Type af placering | LocationType |
+| Matrikelnummer | CadastralNo |
+| Ejerlav | CadastralDistrict |
 
-## Architecture
+## Ownership Data Integration
 
 ### Services
 - **PostgreSQL 17** - Database for storing wind turbine data
