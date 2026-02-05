@@ -1,8 +1,11 @@
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using masterdata_api.Data;
 using masterdataapi.Models;
 using Microsoft.EntityFrameworkCore;
+using Polly;
+using Polly.Retry;
 
 namespace masterdata_api.Services;
 
@@ -11,6 +14,7 @@ public class CadastralLookupService
     private readonly HttpClient _httpClient;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<CadastralLookupService> _logger;
+    private readonly ResiliencePipeline<HttpResponseMessage> _retryPipeline;
 
     public CadastralLookupService(
         HttpClient httpClient,
@@ -20,6 +24,30 @@ public class CadastralLookupService
         _httpClient = httpClient;
         _context = context;
         _logger = logger;
+        
+        // Configure retry policy for rate limiting
+        _retryPipeline = new ResiliencePipelineBuilder<HttpResponseMessage>()
+            .AddRetry(new RetryStrategyOptions<HttpResponseMessage>
+            {
+                ShouldHandle = new PredicateBuilder<HttpResponseMessage>()
+                    .Handle<HttpRequestException>()
+                    .HandleResult(response => 
+                        response.StatusCode == HttpStatusCode.TooManyRequests || 
+                        response.StatusCode == (HttpStatusCode)429),
+                MaxRetryAttempts = 3,
+                Delay = TimeSpan.FromSeconds(5),
+                OnRetry = args =>
+                {
+                    _logger.LogWarning(
+                        "Rate limited (status {StatusCode}). Retrying in {Delay}s. Attempt {AttemptNumber} of {MaxAttempts}",
+                        args.Outcome.Result?.StatusCode,
+                        args.RetryDelay.TotalSeconds,
+                        args.AttemptNumber + 1,
+                        3);
+                    return ValueTask.CompletedTask;
+                }
+            })
+            .Build();
     }
 
     /// <summary>
@@ -98,7 +126,9 @@ public class CadastralLookupService
 
             _logger.LogDebug("Querying DAWA API: {Url}", url);
 
-            var response = await _httpClient.GetAsync(url);
+            var response = await _retryPipeline.ExecuteAsync(async ct => 
+                await _httpClient.GetAsync(url, ct), CancellationToken.None);
+            
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
@@ -112,7 +142,6 @@ public class CadastralLookupService
 
             var sfEjendomsNr = results[0].Jordstykke?.SfEjendomsNr;
             _logger.LogDebug("Found sfeejendomsnr: {SfEjendomsNr} for query: {Query}", sfEjendomsNr, query);
-            await Task.Delay(TimeSpan.FromSeconds(1)); // To avoid rate limiting
             return sfEjendomsNr;
         }
         catch (Exception ex)
@@ -134,7 +163,9 @@ public class CadastralLookupService
 
             _logger.LogDebug("Querying OIS API: {Url}", url);
 
-            var response = await _httpClient.GetAsync(url);
+            var response = await _retryPipeline.ExecuteAsync(async ct => 
+                await _httpClient.GetAsync(url, ct), CancellationToken.None);
+            
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();

@@ -121,7 +121,7 @@ public class ExcelImportService
                     if (!string.IsNullOrWhiteSpace(turbine.CadastralNo) && 
                         !string.IsNullOrWhiteSpace(turbine.CadastralDistrict))
                     {
-                        if (turbine.CapacityKw > 1500)
+                        if (turbine.CapacityKw > 3500)
                         {
                             var (site, sfEjendomsnr) = await _cadastralLookupService.GetOrCreateSiteFromCadastralDataAsync(
                                 turbine.CadastralNo, 
