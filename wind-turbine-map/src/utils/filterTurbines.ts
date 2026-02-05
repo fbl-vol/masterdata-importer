@@ -36,6 +36,13 @@ export function filterTurbines(
       }
     }
 
+    // Filter by site names
+    if (filters.siteNames.length > 0) {
+      if (!turbine.siteName || !filters.siteNames.includes(turbine.siteName)) {
+        return false;
+      }
+    }
+
     // Filter by capacity range (in MW, but stored as kW)
     if (turbine.capacityKw !== null) {
       const capacityMw = turbine.capacityKw / 1000;

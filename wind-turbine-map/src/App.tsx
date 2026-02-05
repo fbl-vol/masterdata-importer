@@ -15,6 +15,7 @@ function App() {
     setLocalAuthorities,
     setLocationTypes,
     setTypeDesignations,
+    setSiteNames,
     setCapacityRange,
     setYearRange,
     resetFilters,
@@ -97,12 +98,14 @@ function App() {
               selectedAuthorities={filters.localAuthorities}
               selectedLocationTypes={filters.locationTypes}
               selectedTypeDesignations={filters.typeDesignations}
+              selectedSiteNames={filters.siteNames}
               capacityRange={filters.capacityRange}
               yearRange={filters.yearRange}
               onManufacturersChange={setManufacturers}
               onAuthoritiesChange={setLocalAuthorities}
               onLocationTypesChange={setLocationTypes}
               onTypeDesignationsChange={setTypeDesignations}
+              onSiteNamesChange={setSiteNames}
               onCapacityRangeChange={setCapacityRange}
               onYearRangeChange={setYearRange}
               onResetFilters={resetFilters}
