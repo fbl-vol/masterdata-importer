@@ -24,13 +24,14 @@ public class CadastralLookupService
 
     /// <summary>
     /// Gets or creates a Site based on cadastral information
+    /// Returns the site and the sfeejendomsnr to be stored on the turbine
     /// </summary>
-    public async Task<Site?> GetOrCreateSiteFromCadastralDataAsync(string? cadastralNo, string? cadastralDistrict)
+    public async Task<(Site? site, string? sfEjendomsnr)> GetOrCreateSiteFromCadastralDataAsync(string? cadastralNo, string? cadastralDistrict)
     {
         if (string.IsNullOrWhiteSpace(cadastralNo) || string.IsNullOrWhiteSpace(cadastralDistrict))
         {
             _logger.LogDebug("Cadastral information is missing, skipping site lookup");
-            return null;
+            return (null, null);
         }
 
         try
@@ -41,16 +42,7 @@ public class CadastralLookupService
             {
                 _logger.LogWarning("Could not retrieve sfeejendomsnr for cadastral {CadastralNo}, {CadastralDistrict}", 
                     cadastralNo, cadastralDistrict);
-                return null;
-            }
-
-            // Check if we already have a site with this sfeejendomsnr
-            var existingSite = await _context.Sites
-                .FirstOrDefaultAsync(s => s.SfEjendomsNr == sfEjendomsNr);
-
-            if (existingSite != null)
-            {
-                return existingSite;
+                return (null, null);
             }
 
             // Step 2: Get owner name from OIS API
@@ -61,11 +53,20 @@ public class CadastralLookupService
                 ownerName = $"Unknown Owner (BFE: {sfEjendomsNr})";
             }
 
-            // Step 3: Create new site
+            // Step 3: Check if we already have a site with this owner name
+            var existingSite = await _context.Sites
+                .FirstOrDefaultAsync(s => s.Name == ownerName);
+
+            if (existingSite != null)
+            {
+                _logger.LogDebug("Found existing site for owner: {OwnerName}", ownerName);
+                return (existingSite, sfEjendomsNr);
+            }
+
+            // Step 4: Create new site for this owner
             var newSite = new Site
             {
                 Name = ownerName,
-                SfEjendomsNr = sfEjendomsNr,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -73,16 +74,15 @@ public class CadastralLookupService
             _context.Sites.Add(newSite);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Created new site: {SiteName} with sfeejendomsnr {SfEjendomsNr}", 
-                ownerName, sfEjendomsNr);
+            _logger.LogInformation("Created new site: {SiteName}", ownerName);
 
-            return newSite;
+            return (newSite, sfEjendomsNr);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during cadastral lookup for {CadastralNo}, {CadastralDistrict}", 
                 cadastralNo, cadastralDistrict);
-            return null;
+            return (null, null);
         }
     }
 

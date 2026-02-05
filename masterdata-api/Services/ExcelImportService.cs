@@ -123,13 +123,18 @@ public class ExcelImportService
                     {
                         if (turbine.CapacityKw > 1500)
                         {
-                            var site = await _cadastralLookupService.GetOrCreateSiteFromCadastralDataAsync(
+                            var (site, sfEjendomsnr) = await _cadastralLookupService.GetOrCreateSiteFromCadastralDataAsync(
                                 turbine.CadastralNo, 
                                 turbine.CadastralDistrict);
                         
                             if (site != null)
                             {
                                 turbine.SiteId = site.Id;
+                            }
+                            
+                            if (!string.IsNullOrWhiteSpace(sfEjendomsnr))
+                            {
+                                turbine.SfeEjendomsnr = sfEjendomsnr;
                             }
                         }
                     }

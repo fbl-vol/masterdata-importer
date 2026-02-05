@@ -30,7 +30,7 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Site>(entity =>
         {
-            entity.HasIndex(e => e.SfEjendomsNr);
+            entity.HasIndex(e => e.Name);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });

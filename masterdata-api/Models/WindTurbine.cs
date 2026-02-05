@@ -42,6 +42,9 @@ public class WindTurbine
     [MaxLength(100)]
     public string? CadastralNo { get; set; }
 
+    [MaxLength(100)]
+    public string? SfeEjendomsnr { get; set; }
+
     [Column(TypeName = "decimal(12,2)")]
     public decimal? CoordinateX { get; set; }
 

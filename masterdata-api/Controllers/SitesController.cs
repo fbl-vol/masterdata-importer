@@ -36,7 +36,6 @@ public class SitesController : ControllerBase
             {
                 Id = s.Id,
                 Name = s.Name,
-                SfEjendomsNr = s.SfEjendomsNr,
                 CreatedAt = s.CreatedAt,
                 UpdatedAt = s.UpdatedAt,
                 TurbineCount = s.WindTurbines.Count
@@ -58,7 +57,6 @@ public class SitesController : ControllerBase
             {
                 Id = s.Id,
                 Name = s.Name,
-                SfEjendomsNr = s.SfEjendomsNr,
                 CreatedAt = s.CreatedAt,
                 UpdatedAt = s.UpdatedAt,
                 TurbineCount = s.WindTurbines.Count
@@ -88,7 +86,6 @@ public class SitesController : ControllerBase
             {
                 Id = s.Id,
                 Name = s.Name,
-                SfEjendomsNr = s.SfEjendomsNr,
                 CreatedAt = s.CreatedAt,
                 UpdatedAt = s.UpdatedAt,
                 Turbines = s.WindTurbines
@@ -110,6 +107,7 @@ public class SitesController : ControllerBase
                         LocationType = t.LocationType,
                         CadastralDistrict = t.CadastralDistrict,
                         CadastralNo = t.CadastralNo,
+                        SfeEjendomsnr = t.SfeEjendomsnr,
                         CoordinateX = t.CoordinateX,
                         CoordinateY = t.CoordinateY,
                         CoordinateOrigin = t.CoordinateOrigin,

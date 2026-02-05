@@ -15,6 +15,7 @@ public class WindTurbineDto
     public string? LocationType { get; set; }
     public string? CadastralDistrict { get; set; }
     public string? CadastralNo { get; set; }
+    public string? SfeEjendomsnr { get; set; }
     public decimal? CoordinateX { get; set; }
     public decimal? CoordinateY { get; set; }
     public string? CoordinateOrigin { get; set; }
