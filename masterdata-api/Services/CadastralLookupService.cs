@@ -112,7 +112,7 @@ public class CadastralLookupService
 
             var sfEjendomsNr = results[0].Jordstykke?.SfEjendomsNr;
             _logger.LogDebug("Found sfeejendomsnr: {SfEjendomsNr} for query: {Query}", sfEjendomsNr, query);
-
+            await Task.Delay(TimeSpan.FromSeconds(5)); // To avoid rate limiting
             return sfEjendomsNr;
         }
         catch (Exception ex)

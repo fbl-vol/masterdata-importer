@@ -1,15 +1,20 @@
+version: '3.8'
+
 services:
   api:
     build:
-      context: ./MasterDataImporter
+      context: ./masterdata-api
       dockerfile: Dockerfile
     container_name: masterdata-api
     ports:
       - "8082:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ConnectionStrings__DefaultConnection=Host=pendio-postgres;Port=5432;Database=masterdata;Username=pendio;Password=pendio
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=masterdata;Username=postgres;Password=postgres
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    restart: always
     networks:
       - pendio-network
     restart: unless-stopped
@@ -18,3 +23,4 @@ networks:
   pendio-network:
     external: true
     name: pendio_pendio-network
+

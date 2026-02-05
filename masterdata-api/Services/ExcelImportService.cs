@@ -25,8 +25,8 @@ public class ExcelImportService
         { "Typebetegnelse", "TypeDesignation" },
         { "Kommune", "LocalAuthority" },
         { "Type af placering", "LocationType" },
-        { "Matrikelnummer", "CadastralNo" },
-        { "Ejerlav", "CadastralDistrict" },
+        { "Matrikel-nummer", "CadastralNo" },
+        { "MatrikelLav", "CadastralDistrict" },
         {"X (øst) koordinat \nUTM 32 Euref89", "EastCoordinate" },
         {"Y (nord) koordinat \nUTM 32 Euref89", "NorthCoordinate" }
     };
@@ -39,13 +39,12 @@ public class ExcelImportService
         _context = context;
         _logger = logger;
         _cadastralLookupService = cadastralLookupService;
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
     }
 
     public async Task<ImportResultDto> ImportFromExcelAsync(Stream excelStream)
     {
         var result = new ImportResultDto();
-
+        ExcelPackage.License.SetNonCommercialPersonal("Frederik Lottrup");
         try
         {
             using var package = new ExcelPackage(excelStream);

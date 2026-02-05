@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { WindTurbine } from '../../types/turbine';
 import { getUniqueValues } from '../../utils/filterTurbines';
 import './FilterPanel.css';
@@ -35,10 +36,26 @@ export function FilterPanel({
   onYearRangeChange,
   onResetFilters,
 }: FilterPanelProps) {
+  // Search states for each filterable section
+  const [manufacturerSearch, setManufacturerSearch] = useState('');
+  const [authoritySearch, setAuthoritySearch] = useState('');
+  const [typeDesignationSearch, setTypeDesignationSearch] = useState('');
+
   const manufacturers = getUniqueValues(turbines, 'manufacturer');
   const authorities = getUniqueValues(turbines, 'localAuthority');
   const locationTypes = getUniqueValues(turbines, 'locationType');
   const typeDesignations = getUniqueValues(turbines, 'typeDesignation');
+
+  // Filter options based on search queries
+  const filteredManufacturers = manufacturers.filter(m => 
+    m.toLowerCase().includes(manufacturerSearch.toLowerCase())
+  );
+  const filteredAuthorities = authorities.filter(a => 
+    a.toLowerCase().includes(authoritySearch.toLowerCase())
+  );
+  const filteredTypeDesignations = typeDesignations.filter(t => 
+    t.toLowerCase().includes(typeDesignationSearch.toLowerCase())
+  );
 
   const currentYear = new Date().getFullYear();
 
@@ -78,8 +95,15 @@ export function FilterPanel({
       {/* Manufacturer Filter */}
       <div className="filter-section">
         <h3>Manufacturer</h3>
+        <input
+          type="text"
+          placeholder="Search manufacturers..."
+          value={manufacturerSearch}
+          onChange={(e) => setManufacturerSearch(e.target.value)}
+          className="filter-search-input"
+        />
         <div className="filter-options">
-          {manufacturers.slice(0, 10).map(manufacturer => (
+          {filteredManufacturers.slice(0, 10).map(manufacturer => (
             <label key={manufacturer} className="filter-checkbox">
               <input
                 type="checkbox"
@@ -93,10 +117,10 @@ export function FilterPanel({
               <span>{manufacturer}</span>
             </label>
           ))}
-          {manufacturers.length > 10 && (
+          {filteredManufacturers.length > 10 && (
             <details className="filter-more">
-              <summary>Show {manufacturers.length - 10} more...</summary>
-              {manufacturers.slice(10).map(manufacturer => (
+              <summary>Show {filteredManufacturers.length - 10} more...</summary>
+              {filteredManufacturers.slice(10).map(manufacturer => (
                 <label key={manufacturer} className="filter-checkbox">
                   <input
                     type="checkbox"
@@ -118,8 +142,15 @@ export function FilterPanel({
       {/* Local Authority Filter */}
       <div className="filter-section">
         <h3>Local Authority</h3>
+        <input
+          type="text"
+          placeholder="Search authorities..."
+          value={authoritySearch}
+          onChange={(e) => setAuthoritySearch(e.target.value)}
+          className="filter-search-input"
+        />
         <div className="filter-options">
-          {authorities.slice(0, 10).map(authority => (
+          {filteredAuthorities.slice(0, 10).map(authority => (
             <label key={authority} className="filter-checkbox">
               <input
                 type="checkbox"
@@ -133,10 +164,10 @@ export function FilterPanel({
               <span>{authority}</span>
             </label>
           ))}
-          {authorities.length > 10 && (
+          {filteredAuthorities.length > 10 && (
             <details className="filter-more">
-              <summary>Show {authorities.length - 10} more...</summary>
-              {authorities.slice(10).map(authority => (
+              <summary>Show {filteredAuthorities.length - 10} more...</summary>
+              {filteredAuthorities.slice(10).map(authority => (
                 <label key={authority} className="filter-checkbox">
                   <input
                     type="checkbox"
@@ -179,8 +210,15 @@ export function FilterPanel({
       {/* Type Designation Filter */}
       <div className="filter-section">
         <h3>Type Designation</h3>
+        <input
+          type="text"
+          placeholder="Search type designations..."
+          value={typeDesignationSearch}
+          onChange={(e) => setTypeDesignationSearch(e.target.value)}
+          className="filter-search-input"
+        />
         <div className="filter-options">
-          {typeDesignations.slice(0, 10).map(designation => (
+          {filteredTypeDesignations.slice(0, 10).map(designation => (
             <label key={designation} className="filter-checkbox">
               <input
                 type="checkbox"
@@ -194,10 +232,10 @@ export function FilterPanel({
               <span>{designation}</span>
             </label>
           ))}
-          {typeDesignations.length > 10 && (
+          {filteredTypeDesignations.length > 10 && (
             <details className="filter-more">
-              <summary>Show {typeDesignations.length - 10} more...</summary>
-              {typeDesignations.slice(10).map(designation => (
+              <summary>Show {filteredTypeDesignations.length - 10} more...</summary>
+              {filteredTypeDesignations.slice(10).map(designation => (
                 <label key={designation} className="filter-checkbox">
                   <input
                     type="checkbox"
