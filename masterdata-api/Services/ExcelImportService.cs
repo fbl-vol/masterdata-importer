@@ -121,13 +121,16 @@ public class ExcelImportService
                     if (!string.IsNullOrWhiteSpace(turbine.CadastralNo) && 
                         !string.IsNullOrWhiteSpace(turbine.CadastralDistrict))
                     {
-                        var site = await _cadastralLookupService.GetOrCreateSiteFromCadastralDataAsync(
-                            turbine.CadastralNo, 
-                            turbine.CadastralDistrict);
-                        
-                        if (site != null)
+                        if (turbine.CapacityKw > 1500)
                         {
-                            turbine.SiteId = site.Id;
+                            var site = await _cadastralLookupService.GetOrCreateSiteFromCadastralDataAsync(
+                                turbine.CadastralNo, 
+                                turbine.CadastralDistrict);
+                        
+                            if (site != null)
+                            {
+                                turbine.SiteId = site.Id;
+                            }
                         }
                     }
 
