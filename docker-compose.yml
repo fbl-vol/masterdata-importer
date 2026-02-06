@@ -3,9 +3,9 @@ version: '3.8'
 services:
   api:
     build:
-      context: ./masterdata-api
+      context: ./masterdataapi
       dockerfile: Dockerfile
-    container_name: masterdata-api
+    container_name: masterdataapi
     ports:
       - "8082:8080"
     environment:

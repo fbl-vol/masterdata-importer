@@ -4,7 +4,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>masterdata_api</RootNamespace>
-    <AssemblyName>masterdata-api</AssemblyName>
+    <AssemblyName>masterdataapi</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="8.4.1" />

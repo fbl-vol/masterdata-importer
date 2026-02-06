@@ -259,7 +259,7 @@ docker compose up --build
 docker compose up -d
 
 # View logs
-docker logs masterdata-api
+docker logs masterdataapi
 docker logs masterdata-postgres
 
 # Stop services
@@ -320,7 +320,7 @@ masterdata-importer/
 ## Troubleshooting
 
 ### Container won't start
-Check logs: `docker logs masterdata-api`
+Check logs: `docker logs masterdataapi`
 
 ### Database connection issues
 Ensure PostgreSQL is healthy: `docker ps`
