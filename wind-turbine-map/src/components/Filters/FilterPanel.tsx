@@ -9,12 +9,14 @@ interface FilterPanelProps {
   selectedAuthorities: string[];
   selectedLocationTypes: string[];
   selectedTypeDesignations: string[];
+  selectedSiteNames: string[];
   capacityRange: { min: number; max: number };
   yearRange: { min: number; max: number };
   onManufacturersChange: (selected: string[]) => void;
   onAuthoritiesChange: (selected: string[]) => void;
   onLocationTypesChange: (selected: string[]) => void;
   onTypeDesignationsChange: (selected: string[]) => void;
+  onSiteNamesChange: (selected: string[]) => void;
   onCapacityRangeChange: (min: number, max: number) => void;
   onYearRangeChange: (min: number, max: number) => void;
   onResetFilters: () => void;
@@ -26,12 +28,14 @@ export function FilterPanel({
   selectedAuthorities,
   selectedLocationTypes,
   selectedTypeDesignations,
+  selectedSiteNames,
   capacityRange,
   yearRange,
   onManufacturersChange,
   onAuthoritiesChange,
   onLocationTypesChange,
   onTypeDesignationsChange,
+  onSiteNamesChange,
   onCapacityRangeChange,
   onYearRangeChange,
   onResetFilters,
@@ -40,11 +44,13 @@ export function FilterPanel({
   const [manufacturerSearch, setManufacturerSearch] = useState('');
   const [authoritySearch, setAuthoritySearch] = useState('');
   const [typeDesignationSearch, setTypeDesignationSearch] = useState('');
+  const [siteNameSearch, setSiteNameSearch] = useState('');
 
   const manufacturers = getUniqueValues(turbines, 'manufacturer');
   const authorities = getUniqueValues(turbines, 'localAuthority');
   const locationTypes = getUniqueValues(turbines, 'locationType');
   const typeDesignations = getUniqueValues(turbines, 'typeDesignation');
+  const siteNames = getUniqueValues(turbines, 'siteName');
 
   // Filter options based on search queries
   const filteredManufacturers = manufacturers.filter(m => 
@@ -55,6 +61,9 @@ export function FilterPanel({
   );
   const filteredTypeDesignations = typeDesignations.filter(t => 
     t.toLowerCase().includes(typeDesignationSearch.toLowerCase())
+  );
+  const filteredSiteNames = siteNames.filter(s =>
+    s.toLowerCase().includes(siteNameSearch.toLowerCase())
   );
 
   const currentYear = new Date().getFullYear();
@@ -76,6 +85,7 @@ export function FilterPanel({
     selectedAuthorities.length > 0 ||
     selectedLocationTypes.length > 0 ||
     selectedTypeDesignations.length > 0 ||
+    selectedSiteNames.length > 0 ||
     capacityRange.min !== 0 ||
     capacityRange.max !== 10 ||
     yearRange.min !== currentYear - 10 ||
@@ -247,6 +257,53 @@ export function FilterPanel({
                     )}
                   />
                   <span>{designation}</span>
+                </label>
+              ))}
+            </details>
+          )}
+        </div>
+      </div>
+
+      {/* Site Name Filter */}
+      <div className="filter-section">
+        <h3>Site Name</h3>
+        <input
+          type="text"
+          placeholder="Search site names..."
+          value={siteNameSearch}
+          onChange={(e) => setSiteNameSearch(e.target.value)}
+          className="filter-search-input"
+        />
+        <div className="filter-options">
+          {filteredSiteNames.slice(0, 10).map(siteName => (
+            <label key={siteName} className="filter-checkbox">
+              <input
+                type="checkbox"
+                checked={selectedSiteNames.includes(siteName)}
+                onChange={() => handleCheckboxChange(
+                  siteName,
+                  selectedSiteNames,
+                  onSiteNamesChange
+                )}
+              />
+              <span>{siteName}</span>
+            </label>
+          ))}
+          {filteredSiteNames.length > 10 && (
+            <details className="filter-more">
+              <summary>Show {filteredSiteNames.length - 10} more...</summary>
+              {filteredSiteNames.slice(10).map(siteName => (
+                <label key={siteName} className="filter-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedSiteNames.includes(siteName)}
+                    onChange={() => handleCheckboxChange(
+                      siteName,
+                      selectedSiteNames,
+                      onSiteNamesChange
+                    )}
+                  />
+                  <span>{siteName}</span>
                 </label>
               ))}
             </details>

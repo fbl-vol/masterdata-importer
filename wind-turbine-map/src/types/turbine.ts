@@ -17,6 +17,7 @@ export interface WindTurbine {
   coordinateX: number | null;
   coordinateY: number | null;
   coordinateOrigin: string | null;
+  siteName: string | null;
   createdAt: string;
 }
 
@@ -25,6 +26,7 @@ export interface TurbineFilters {
   localAuthorities: string[];
   locationTypes: string[];
   typeDesignations: string[];
+  siteNames: string[];
   capacityRange: { min: number; max: number };
   yearRange: { min: number; max: number };
 }

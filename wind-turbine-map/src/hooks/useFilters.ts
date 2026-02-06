@@ -8,6 +8,7 @@ const defaultFilters: TurbineFilters = {
   localAuthorities: [],
   locationTypes: [],
   typeDesignations: [],
+  siteNames: [],
   capacityRange: { min: 0, max: 10 }, // 0-10 MW
   yearRange: { min: currentYear - 10, max: currentYear },
 };
@@ -18,6 +19,7 @@ interface UseFiltersResult {
   setLocalAuthorities: (authorities: string[]) => void;
   setLocationTypes: (types: string[]) => void;
   setTypeDesignations: (designations: string[]) => void;
+  setSiteNames: (siteNames: string[]) => void;
   setCapacityRange: (min: number, max: number) => void;
   setYearRange: (min: number, max: number) => void;
   resetFilters: () => void;
@@ -44,6 +46,10 @@ export function useFilters(): UseFiltersResult {
 
   const setTypeDesignations = useCallback((typeDesignations: string[]) => {
     setFilters(prev => ({ ...prev, typeDesignations }));
+  }, []);
+
+  const setSiteNames = useCallback((siteNames: string[]) => {
+    setFilters(prev => ({ ...prev, siteNames }));
   }, []);
 
   const setCapacityRange = useCallback((min: number, max: number) => {
@@ -91,6 +97,13 @@ export function useFilters(): UseFiltersResult {
             newFilters.typeDesignations = [];
           }
           break;
+        case 'siteName':
+          if (value) {
+            newFilters.siteNames = prev.siteNames.filter(s => s !== value);
+          } else {
+            newFilters.siteNames = [];
+          }
+          break;
         case 'capacity':
           newFilters.capacityRange = defaultFilters.capacityRange;
           break;
@@ -109,6 +122,7 @@ export function useFilters(): UseFiltersResult {
     setLocalAuthorities,
     setLocationTypes,
     setTypeDesignations,
+    setSiteNames,
     setCapacityRange,
     setYearRange,
     resetFilters,

@@ -81,6 +81,11 @@ export function TurbineMap({ turbines, colorBy = 'manufacturer' }: TurbineMapPro
                   <div className="turbine-popup-row">
                     <strong>Location:</strong> {turbine.localAuthority || 'N/A'}
                   </div>
+                  {turbine.siteName && (
+                    <div className="turbine-popup-row">
+                      <strong>Site:</strong> {turbine.siteName}
+                    </div>
+                  )}
                   <div className="turbine-popup-row">
                     <strong>Type:</strong> {turbine.locationType || 'N/A'}
                   </div>
