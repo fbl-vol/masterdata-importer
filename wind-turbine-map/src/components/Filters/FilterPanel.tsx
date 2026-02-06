@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { WindTurbine } from '../../types/turbine';
 import { getUniqueValues } from '../../utils/filterTurbines';
+import { useDebounce } from '../../hooks/useDebounce';
 import './FilterPanel.css';
 
 interface FilterPanelProps {
@@ -51,28 +52,56 @@ export function FilterPanel({
   const [siteNameSearch, setSiteNameSearch] = useState('');
   const [gsrnSearch, setGsrnSearch] = useState('');
 
-  const manufacturers = getUniqueValues(turbines, 'manufacturer');
-  const authorities = getUniqueValues(turbines, 'localAuthority');
-  const locationTypes = getUniqueValues(turbines, 'locationType');
-  const typeDesignations = getUniqueValues(turbines, 'typeDesignation');
-  const siteNames = getUniqueValues(turbines, 'siteName');
-  const gsrns = getUniqueValues(turbines, 'gsrn');
+  // Debounced search values with 300ms delay
+  const debouncedManufacturerSearch = useDebounce(manufacturerSearch, 300);
+  const debouncedAuthoritySearch = useDebounce(authoritySearch, 300);
+  const debouncedTypeDesignationSearch = useDebounce(typeDesignationSearch, 300);
+  const debouncedSiteNameSearch = useDebounce(siteNameSearch, 300);
+  const debouncedGsrnSearch = useDebounce(gsrnSearch, 300);
 
-  // Filter options based on search queries
-  const filteredManufacturers = manufacturers.filter(m => 
-    m.toLowerCase().includes(manufacturerSearch.toLowerCase())
+    // Memoize expensive unique value calculations - only recalculate when turbines change
+  const manufacturers = useMemo(() => getUniqueValues(turbines, 'manufacturer'), [turbines]);
+  const authorities = useMemo(() => getUniqueValues(turbines, 'localAuthority'), [turbines]);
+  const locationTypes = useMemo(() => getUniqueValues(turbines, 'locationType'), [turbines]);
+  const typeDesignations = useMemo(() => getUniqueValues(turbines, 'typeDesignation'), [turbines]);
+  const siteNames = useMemo(() => getUniqueValues(turbines, 'siteName'), [turbines]);
+  const gsrns = useMemo(() => getUniqueValues(turbines, 'gsrn'), [turbines]);
+
+  // Filter options based on debounced search queries
+  // Only apply filter if search has at least 3 characters, otherwise show all
+  const filteredManufacturers = useMemo(() => 
+    debouncedManufacturerSearch.length >= 2
+      ? manufacturers.filter(m => m.toLowerCase().includes(debouncedManufacturerSearch.toLowerCase()))
+      : manufacturers,
+    [manufacturers, debouncedManufacturerSearch]
   );
-  const filteredAuthorities = authorities.filter(a => 
-    a.toLowerCase().includes(authoritySearch.toLowerCase())
+  
+  const filteredAuthorities = useMemo(() =>
+    debouncedAuthoritySearch.length >= 2
+      ? authorities.filter(a => a.toLowerCase().includes(debouncedAuthoritySearch.toLowerCase()))
+      : authorities,
+    [authorities, debouncedAuthoritySearch]
   );
-  const filteredTypeDesignations = typeDesignations.filter(t => 
-    t.toLowerCase().includes(typeDesignationSearch.toLowerCase())
+  
+  const filteredTypeDesignations = useMemo(() =>
+    debouncedTypeDesignationSearch.length >= 1
+      ? typeDesignations.filter(t => t.toLowerCase().includes(debouncedTypeDesignationSearch.toLowerCase()))
+      : typeDesignations,
+    [typeDesignations, debouncedTypeDesignationSearch]
   );
-  const filteredSiteNames = siteNames.filter(s =>
-    s.toLowerCase().includes(siteNameSearch.toLowerCase())
+  
+  const filteredSiteNames = useMemo(() =>
+    debouncedSiteNameSearch.length >= 3
+      ? siteNames.filter(s => s.toLowerCase().includes(debouncedSiteNameSearch.toLowerCase()))
+      : siteNames,
+    [siteNames, debouncedSiteNameSearch]
   );
-  const filteredGsrns = gsrns.filter(g =>
-    g.toLowerCase().includes(gsrnSearch.toLowerCase())
+  
+  const filteredGsrns = useMemo(() =>
+    debouncedGsrnSearch.length >= 3
+      ? gsrns.filter(g => g.toLowerCase().includes(debouncedGsrnSearch.toLowerCase()))
+      : gsrns,
+    [gsrns, debouncedGsrnSearch]
   );
 
   const currentYear = new Date().getFullYear();
