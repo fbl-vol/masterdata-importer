@@ -10,6 +10,7 @@ interface FilterPanelProps {
   selectedLocationTypes: string[];
   selectedTypeDesignations: string[];
   selectedSiteNames: string[];
+  selectedGsrns: string[];
   capacityRange: { min: number; max: number };
   yearRange: { min: number; max: number };
   onManufacturersChange: (selected: string[]) => void;
@@ -17,6 +18,7 @@ interface FilterPanelProps {
   onLocationTypesChange: (selected: string[]) => void;
   onTypeDesignationsChange: (selected: string[]) => void;
   onSiteNamesChange: (selected: string[]) => void;
+  onGsrnsChange: (selected: string[]) => void;
   onCapacityRangeChange: (min: number, max: number) => void;
   onYearRangeChange: (min: number, max: number) => void;
   onResetFilters: () => void;
@@ -29,6 +31,7 @@ export function FilterPanel({
   selectedLocationTypes,
   selectedTypeDesignations,
   selectedSiteNames,
+  selectedGsrns,
   capacityRange,
   yearRange,
   onManufacturersChange,
@@ -36,6 +39,7 @@ export function FilterPanel({
   onLocationTypesChange,
   onTypeDesignationsChange,
   onSiteNamesChange,
+  onGsrnsChange,
   onCapacityRangeChange,
   onYearRangeChange,
   onResetFilters,
@@ -45,12 +49,14 @@ export function FilterPanel({
   const [authoritySearch, setAuthoritySearch] = useState('');
   const [typeDesignationSearch, setTypeDesignationSearch] = useState('');
   const [siteNameSearch, setSiteNameSearch] = useState('');
+  const [gsrnSearch, setGsrnSearch] = useState('');
 
   const manufacturers = getUniqueValues(turbines, 'manufacturer');
   const authorities = getUniqueValues(turbines, 'localAuthority');
   const locationTypes = getUniqueValues(turbines, 'locationType');
   const typeDesignations = getUniqueValues(turbines, 'typeDesignation');
   const siteNames = getUniqueValues(turbines, 'siteName');
+  const gsrns = getUniqueValues(turbines, 'gsrn');
 
   // Filter options based on search queries
   const filteredManufacturers = manufacturers.filter(m => 
@@ -64,6 +70,9 @@ export function FilterPanel({
   );
   const filteredSiteNames = siteNames.filter(s =>
     s.toLowerCase().includes(siteNameSearch.toLowerCase())
+  );
+  const filteredGsrns = gsrns.filter(g =>
+    g.toLowerCase().includes(gsrnSearch.toLowerCase())
   );
 
   const currentYear = new Date().getFullYear();
@@ -86,6 +95,7 @@ export function FilterPanel({
     selectedLocationTypes.length > 0 ||
     selectedTypeDesignations.length > 0 ||
     selectedSiteNames.length > 0 ||
+    selectedGsrns.length > 0 ||
     capacityRange.min !== 0 ||
     capacityRange.max !== 10 ||
     yearRange.min !== currentYear - 10 ||
@@ -304,6 +314,53 @@ export function FilterPanel({
                     )}
                   />
                   <span>{siteName}</span>
+                </label>
+              ))}
+            </details>
+          )}
+        </div>
+      </div>
+
+      {/* GSRN Filter */}
+      <div className="filter-section">
+        <h3>GSRN</h3>
+        <input
+          type="text"
+          placeholder="Search GSRNs..."
+          value={gsrnSearch}
+          onChange={(e) => setGsrnSearch(e.target.value)}
+          className="filter-search-input"
+        />
+        <div className="filter-options">
+          {filteredGsrns.slice(0, 10).map(gsrn => (
+            <label key={gsrn} className="filter-checkbox">
+              <input
+                type="checkbox"
+                checked={selectedGsrns.includes(gsrn)}
+                onChange={() => handleCheckboxChange(
+                  gsrn,
+                  selectedGsrns,
+                  onGsrnsChange
+                )}
+              />
+              <span>{gsrn}</span>
+            </label>
+          ))}
+          {filteredGsrns.length > 10 && (
+            <details className="filter-more">
+              <summary>Show {filteredGsrns.length - 10} more...</summary>
+              {filteredGsrns.slice(10).map(gsrn => (
+                <label key={gsrn} className="filter-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedGsrns.includes(gsrn)}
+                    onChange={() => handleCheckboxChange(
+                      gsrn,
+                      selectedGsrns,
+                      onGsrnsChange
+                    )}
+                  />
+                  <span>{gsrn}</span>
                 </label>
               ))}
             </details>

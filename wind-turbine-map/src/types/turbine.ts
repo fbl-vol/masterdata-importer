@@ -27,6 +27,7 @@ export interface TurbineFilters {
   locationTypes: string[];
   typeDesignations: string[];
   siteNames: string[];
+  gsrns: string[];
   capacityRange: { min: number; max: number };
   yearRange: { min: number; max: number };
 }

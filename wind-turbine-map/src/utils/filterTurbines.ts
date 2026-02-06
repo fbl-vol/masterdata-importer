@@ -8,6 +8,13 @@ export function filterTurbines(
   filters: TurbineFilters
 ): WindTurbine[] {
   return turbines.filter(turbine => {
+    // Filter by GSRN
+    if (filters.gsrns.length > 0) {
+      if (!turbine.gsrn || !filters.gsrns.includes(turbine.gsrn)) {
+        return false;
+      }
+    }
+
     // Filter by manufacturers
     if (filters.manufacturers.length > 0) {
       if (!turbine.manufacturer || !filters.manufacturers.includes(turbine.manufacturer)) {
